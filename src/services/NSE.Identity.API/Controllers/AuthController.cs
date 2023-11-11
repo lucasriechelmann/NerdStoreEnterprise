@@ -71,6 +71,14 @@ public class AuthController : MainController
     {
         var user = await _userManager.FindByEmailAsync(email);
         var claims = await _userManager.GetClaimsAsync(user);
+        var identityClaims = await GetUserClaims(claims, user);
+
+        var encodedToken = EncodeToken(identityClaims);
+
+        return GetTokenResponse(encodedToken, user, claims);
+    }
+    async Task<ClaimsIdentity> GetUserClaims(ICollection<Claim> claims, IdentityUser user)
+    {
         var userRoles = await _userManager.GetRolesAsync(user);
 
         claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
@@ -79,14 +87,17 @@ public class AuthController : MainController
         claims.Add(new Claim(JwtRegisteredClaimNames.Nbf, ToUnixEpochDate(DateTime.UtcNow).ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Iat, ToUnixEpochDate(DateTime.UtcNow).ToString(), ClaimValueTypes.Integer64));
 
-        foreach(var userRole in userRoles)
+        foreach (var userRole in userRoles)
         {
             claims.Add(new Claim("role", userRole));
         }
 
         var identityClaims = new ClaimsIdentity();
         identityClaims.AddClaims(claims);
-
+        return identityClaims;
+    }
+    string EncodeToken(ClaimsIdentity identityClaims)
+    {
         var tokenHandler = new JwtSecurityTokenHandler();
         var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
 
@@ -99,8 +110,10 @@ public class AuthController : MainController
             SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
         });
 
-        var encodedToken = tokenHandler.WriteToken(token);
-
+        return tokenHandler.WriteToken(token);
+    }
+    UserLoginResponse GetTokenResponse(string encodedToken, IdentityUser user, IEnumerable<Claim> claims)
+    {
         return new UserLoginResponse
         {
             AccessToken = encodedToken,
@@ -113,7 +126,6 @@ public class AuthController : MainController
             }
         };
     }
-
     static long ToUnixEpochDate(DateTime date) => 
         (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
 }
