@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
-    <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>55d0bd88-4d75-4f2b-a20c-6d88a1eb5e2c</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
@@ -28,8 +27,6 @@
 
   <ItemGroup>
     <Folder Include="Configuration\" />
-    <Folder Include="Extensions\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
