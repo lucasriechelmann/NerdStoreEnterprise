@@ -1,6 +1,5 @@
 {
   "profiles": {
-
     "https": {
       "commandName": "Project",
       "launchBrowser": true,
