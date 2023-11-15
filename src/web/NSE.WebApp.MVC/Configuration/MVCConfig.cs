@@ -3,7 +3,9 @@ public static class MVCConfig
 {
     public static IServiceCollection AddMVCConfiguration(this IServiceCollection services)
     {
-        services.AddControllersWithViews();
+        services
+            .AddControllersWithViews()
+            .AddRazorRuntimeCompilation();
 
         return services;
     }

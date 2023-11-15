@@ -65,7 +65,7 @@ public class AuthController : MainController
         }
         
         AddError("Incorrect password or email");
-        return BadRequest();
+        return CustomResponse();
     }
     async Task<UserLoginResponse> GetJwt(string email)
     {
