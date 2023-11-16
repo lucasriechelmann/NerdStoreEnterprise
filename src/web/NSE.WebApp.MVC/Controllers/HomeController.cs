@@ -6,13 +6,6 @@ namespace NSE.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
@@ -23,10 +16,30 @@ namespace NSE.WebApp.MVC.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("error/{id:length(3,3)}")]
+        public IActionResult Error(int id)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var errorModel = new ErrorViewModel(id);
+
+            switch (id)
+            {
+                case 500:
+                    errorModel.Message = "An error has occurred! Please try again later or contact our support.";
+                    errorModel.Title = "An error has occurred!";
+                    break;
+                case 404:
+                    errorModel.Message = "The page you are looking for does not exist! <br />Please contact our support.";
+                    errorModel.Title = "Ops! Page not found.";
+                    break;
+                case 403:
+                    errorModel.Message = "You do not have permission to do that.";
+                    errorModel.Title = "Access denied";
+                    break;
+                default:
+                    return StatusCode(404);
+            }
+
+            return View("Error", errorModel);
         }
     }
 }

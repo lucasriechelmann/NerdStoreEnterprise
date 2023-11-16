@@ -2,8 +2,15 @@ namespace NSE.WebApp.MVC.Models
 {
     public class ErrorViewModel
     {
-        public string RequestId { get; set; }
-
-        public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
+        public ErrorViewModel()
+        {                
+        }
+        public ErrorViewModel(int errorCode)
+        {
+            ErrorCode = errorCode;
+        }
+        public string Message { get; set; }
+        public string Title { get; set; }
+        public int ErrorCode { get; set; }
     }
 }

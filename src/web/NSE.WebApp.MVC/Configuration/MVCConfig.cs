@@ -1,4 +1,6 @@
-﻿namespace NSE.WebApp.MVC.Configuration;
+﻿using NSE.WebApp.MVC.Extensions;
+
+namespace NSE.WebApp.MVC.Configuration;
 public static class MVCConfig
 {
     public static IServiceCollection AddMVCConfiguration(this IServiceCollection services)
@@ -13,11 +15,12 @@ public static class MVCConfig
     {
         if (env.IsDevelopment())
         {
-            app.UseDeveloperExceptionPage();
+            app.UseDeveloperExceptionPage();            
         }
         else
         {
-            app.UseExceptionHandler("/Home/Error");            
+            app.UseExceptionHandler("/error/500");  
+            app.UseStatusCodePagesWithRedirects("/error/{0}");
             app.UseHsts();
         }
 
@@ -26,6 +29,8 @@ public static class MVCConfig
         app.UseRouting();
 
         app.UseIdentityConfiguration();
+
+        app.UseMiddleware<ExceptionMiddleware>();
 
         app.UseEndpoints(endpoints =>
         {
