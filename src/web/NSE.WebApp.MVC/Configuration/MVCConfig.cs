@@ -3,11 +3,14 @@
 namespace NSE.WebApp.MVC.Configuration;
 public static class MVCConfig
 {
-    public static IServiceCollection AddMVCConfiguration(this IServiceCollection services)
+    public static IServiceCollection AddMVCConfiguration(this IServiceCollection services, 
+        IConfiguration configuration)
     {
         services
             .AddControllersWithViews()
             .AddRazorRuntimeCompilation();
+
+        services.Configure<AppSettings>(configuration);
 
         return services;
     }

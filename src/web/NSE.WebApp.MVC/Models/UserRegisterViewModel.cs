@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace NSE.WebApp.MVC.Models;
 public class UserRegisterViewModel
@@ -12,4 +13,11 @@ public class UserRegisterViewModel
     [Display(Name = "Confirm Password")]
     [Compare("Password", ErrorMessage = "The passwords do not match")]
     public string ConfirmPassword { get; set; }
+    [Required(ErrorMessage = "The field {0} is mandatory")]
+    [DisplayName("CPF")]
+    //[Cpf]
+    public string Cpf { get; set; }
+    [Required(ErrorMessage = "The field {0} is mandatory")]
+    [DisplayName("Full Name")]
+    public string Name { get; set; }
 }
