@@ -10,7 +10,7 @@ builder.Configuration
 
 builder.Services.AddIdentityConfiguration();
 builder.Services.AddMVCConfiguration(builder.Configuration);
-builder.Services.RegisterServices();
+builder.Services.RegisterServices(builder.Configuration);
 
 var app = builder.Build();
 

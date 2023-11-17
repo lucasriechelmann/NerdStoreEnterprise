@@ -5,12 +5,19 @@ using NSE.WebApp.MVC.Services.Handlers;
 namespace NSE.WebApp.MVC.Configuration;
 public static class DependencyInjectionConfig
 {
-    public static IServiceCollection RegisterServices(this IServiceCollection services)
+    public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
         services.AddHttpClient<IAuthenticationService, AuthenticationService>();
-        services.AddHttpClient<ICatalogService, CatalogService>()
-            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+        //services.AddHttpClient<ICatalogService, CatalogService>()
+        //    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+        services.AddHttpClient("Refit", options =>
+                {
+                    options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value);
+                })
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
+
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
         services.AddScoped<IUser, AspNetUser>();        
 

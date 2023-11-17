@@ -1,4 +1,7 @@
-﻿namespace NSE.WebApp.MVC.Extensions;
+﻿using Refit;
+using System.Net;
+
+namespace NSE.WebApp.MVC.Extensions;
 public class ExceptionMiddleware
 {
 private readonly RequestDelegate _next;
@@ -18,7 +21,15 @@ private readonly RequestDelegate _next;
         }
         catch (CustomHttpRequestException ex)
         {
-            HandleRequestExceptionAsync(context, ex);
+            HandleRequestExceptionAsync(context, ex.StatusCode);
+        }
+        catch (ValidationApiException ex)//For Refit
+        {
+            HandleRequestExceptionAsync(context, ex.StatusCode);
+        }
+        catch (ApiException ex)//For Refit
+        {
+            HandleRequestExceptionAsync(context, ex.StatusCode);
         }
         catch (Exception ex)
         {
@@ -26,9 +37,9 @@ private readonly RequestDelegate _next;
         }
     }
 
-    private void HandleRequestExceptionAsync(HttpContext context, CustomHttpRequestException exception)
+    private void HandleRequestExceptionAsync(HttpContext context, HttpStatusCode statusCode)
     {
-        if (exception.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        if (statusCode == HttpStatusCode.Unauthorized)
         {
             if (context.Request.Path != "/login")
             {
@@ -37,7 +48,7 @@ private readonly RequestDelegate _next;
             }
         }
 
-        context.Response.StatusCode = (int)exception.StatusCode;
+        context.Response.StatusCode = (int)statusCode;
     }
 
     private void HandleExceptionAsync(HttpContext context, Exception exception)
