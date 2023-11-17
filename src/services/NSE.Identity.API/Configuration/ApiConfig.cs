@@ -1,4 +1,5 @@
-﻿namespace NSE.Identity.API.Configuration;
+﻿using NSE.WebAPI.Core.Identity; 
+namespace NSE.Identity.API.Configuration;
 public static class ApiConfig
 {
     public static IServiceCollection AddApiConfiguration(this IServiceCollection services)
@@ -16,7 +17,7 @@ public static class ApiConfig
 
         app.UseHttpsRedirection();
         app.UseRouting();
-        app.UseIdentityConfiguration();        
+        app.UseAuthConfiguration();        
         app.UseEndpoints(endpoints =>
         {
             endpoints.MapControllers();
