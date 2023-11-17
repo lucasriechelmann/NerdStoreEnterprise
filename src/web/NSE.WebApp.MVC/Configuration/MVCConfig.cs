@@ -16,19 +16,25 @@ public static class MVCConfig
     }
     public static IApplicationBuilder UseMVCConfiguration(this IApplicationBuilder app, IWebHostEnvironment env)
     {
-        if (env.IsDevelopment())
-        {
-            app.UseDeveloperExceptionPage();            
-        }
-        else
-        {
-            app.UseExceptionHandler("/error/500");  
-            app.UseStatusCodePagesWithRedirects("/error/{0}");
-            app.UseHsts();
-        }
+        //if (env.IsDevelopment())
+        //{
+        //    app.UseDeveloperExceptionPage();            
+        //}
+        //else
+        //{
+            
+        //}
+
+        app.UseExceptionHandler("/error/500");
+        app.UseStatusCodePagesWithRedirects("/error/{0}");
+        app.UseHsts();
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+
         app.UseRouting();
 
         app.UseIdentityConfiguration();
@@ -39,7 +45,7 @@ public static class MVCConfig
         {
             endpoints.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                pattern: "{controller=Catalog}/{action=Index}/{id?}");
         });
 
         return app;

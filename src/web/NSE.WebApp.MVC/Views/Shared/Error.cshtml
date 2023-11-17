@@ -3,9 +3,8 @@
     ViewData["Title"] = "Error";
 }
 
-<h1 class="text-danger">@ViewData["Title"]</h1>
-
 <div class="container mt-3">
+    <h1 class="text-danger">@ViewData["Title"]</h1>
     @if(Model is null)
     {
         <h2 class="text-danger">An error occurred while processing your request.</h2>

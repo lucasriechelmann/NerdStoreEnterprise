@@ -37,7 +37,7 @@ namespace NSE.WebApp.MVC.Controllers
 
             await LoginUser(response);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Catalog");
         }
         [HttpGet]
         [Route("login")]
@@ -63,7 +63,7 @@ namespace NSE.WebApp.MVC.Controllers
             await LoginUser(response);
 
             if (string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Catalog");
 
             return LocalRedirect(returnUrl);
         }
@@ -72,7 +72,7 @@ namespace NSE.WebApp.MVC.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Catalog");
         }
         async Task LoginUser(UserLoginResponse response)
         {
