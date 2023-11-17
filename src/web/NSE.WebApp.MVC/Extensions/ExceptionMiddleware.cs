@@ -55,6 +55,6 @@ private readonly RequestDelegate _next;
     {
         _logger.LogError(exception, "An error has occurred!");
 
-        context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
     }
 }
