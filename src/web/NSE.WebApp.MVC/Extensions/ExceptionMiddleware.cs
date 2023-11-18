@@ -1,4 +1,5 @@
-﻿using Refit;
+﻿using Polly.CircuitBreaker;
+using Refit;
 using System.Net;
 
 namespace NSE.WebApp.MVC.Extensions;
@@ -31,6 +32,10 @@ private readonly RequestDelegate _next;
         {
             HandleRequestExceptionAsync(context, ex.StatusCode);
         }
+        catch(BrokenCircuitException ex)
+        {
+            HandleCircuitBreakerExceptionAsync(context, ex);
+        }
         catch (Exception ex)
         {
             HandleExceptionAsync(context, ex);
@@ -56,5 +61,11 @@ private readonly RequestDelegate _next;
         _logger.LogError(exception, "An error has occurred!");
 
         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+    }
+    private void HandleCircuitBreakerExceptionAsync(HttpContext context, Exception exception)
+    {
+        _logger.LogError(exception, "Circuit breaker has occurred!");
+
+        context.Response.Redirect("/system-unavailable");
     }
 }

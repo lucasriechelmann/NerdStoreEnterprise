@@ -41,5 +41,17 @@ namespace NSE.WebApp.MVC.Controllers
 
             return View("Error", errorModel);
         }
+        [Route("system-unavailable")]
+        public IActionResult Unavailable()
+        {
+            var errorModel = new ErrorViewModel
+            {
+                Message = "The system is temporarily unavailable, this can be due to high user traffic or maintenance.",
+                Title = "System unavailable",
+                ErrorCode = 503
+            };
+
+            return View("Error", errorModel);
+        }
     }
 }
