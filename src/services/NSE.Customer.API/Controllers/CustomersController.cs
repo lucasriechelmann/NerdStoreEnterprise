@@ -20,6 +20,7 @@ namespace NSE.Customer.API.Controllers
         {
             var result = await _mediatorHandler.SendCommand(
                 new CustomerRegisterCommand(Guid.NewGuid(), "Lucas Riechelmann Ramos", "lucas.riechelmann@hotmail.com", "22943295892"));
+
             return CustomResponse(result);
         }
     }

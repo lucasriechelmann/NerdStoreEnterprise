@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using NSE.WebApp.MVC.Extensions;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
 namespace NSE.WebApp.MVC.Models;
@@ -15,7 +16,7 @@ public class UserRegisterViewModel
     public string ConfirmPassword { get; set; }
     [Required(ErrorMessage = "The field {0} is mandatory")]
     [DisplayName("CPF")]
-    //[Cpf]
+    [Cpf]
     public string Cpf { get; set; }
     [Required(ErrorMessage = "The field {0} is mandatory")]
     [DisplayName("Full Name")]
