@@ -11,10 +11,10 @@ namespace NSE.Customer.API.Data
 {
     public class CustomerContext : DbContext, IUnitOfWork
     {
-        //0private readonly IMediatorHandler _mediatorHandler;
-        public CustomerContext(DbContextOptions<CustomerContext> options/*, IMediatorHandler mediatorHandler*/) : base(options)
+        private readonly IMediatorHandler _mediatorHandler;
+        public CustomerContext(DbContextOptions<CustomerContext> options, IMediatorHandler mediatorHandler) : base(options)
         {
-            //_mediatorHandler = mediatorHandler;
+            _mediatorHandler = mediatorHandler;
             ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.NoTracking;
             ChangeTracker.AutoDetectChangesEnabled = false;
         }
@@ -38,7 +38,9 @@ namespace NSE.Customer.API.Data
         public async Task<bool> Commit()
         {
             var success = await base.SaveChangesAsync() > 0;
-            //if (success) await _mediatorHandler.PublishEvent(this);
+            
+            if (success) 
+                await _mediatorHandler.PublishEvent(this);
 
             return success;
         }

@@ -2,7 +2,7 @@
 using NSE.Core.Data;
 
 namespace NSE.Core.Messages;
-public class CommandHandler
+public abstract class CommandHandler
 {
     protected ValidationResult ValidationResult;
 

@@ -12,6 +12,7 @@ builder.Configuration
 builder.Services.AddApiConfiguration(builder.Configuration);
 builder.Services.AddJwtConfiguration(builder.Configuration);
 builder.Services.AddSwaggerConfiguration();
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 builder.Services.RegisterServices();
 builder.Services.AddEndpointsApiExplorer();
 

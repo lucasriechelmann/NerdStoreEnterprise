@@ -1,14 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 
-namespace NSE.Identity.API.Controllers;
+namespace NSE.WebAPI.Core.Controllers;
 [ApiController]
 public abstract class MainController : Controller
 {
     protected ICollection<string> Errors = new List<string>();
     protected IActionResult CustomResponse(object result = null)
     {
-        if(IsOperationValid())
+        if (IsOperationValid())
             return Ok(result);
 
         return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
@@ -20,7 +20,7 @@ public abstract class MainController : Controller
     {
         var errors = modelState.Values.SelectMany(e => e.Errors);
 
-        foreach(var error in errors)
+        foreach (var error in errors)
             AddError(error.ErrorMessage);
 
         return CustomResponse();

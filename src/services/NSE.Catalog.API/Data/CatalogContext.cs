@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using NSE.Catalog.API.Models;
 using NSE.Core.Data;
+using NSE.Core.Messages;
 using System.ComponentModel.DataAnnotations;
 
 namespace NSE.Catalog.API.Data
@@ -15,8 +15,8 @@ namespace NSE.Catalog.API.Data
         public DbSet<Product> Products { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            //modelBuilder.Ignore<ValidationResult>();
-            //modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
+            modelBuilder.Ignore<Event>();
 
             foreach (var property in modelBuilder.Model.GetEntityTypes().SelectMany(
                 e => e.GetProperties().Where(p => p.ClrType == typeof(string))))
