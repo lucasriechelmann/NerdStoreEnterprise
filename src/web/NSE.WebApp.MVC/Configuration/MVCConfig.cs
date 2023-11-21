@@ -32,9 +32,6 @@ public static class MVCConfig
         app.UseHttpsRedirection();
         app.UseStaticFiles();
 
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
-
         app.UseRouting();
 
         app.UseIdentityConfiguration();

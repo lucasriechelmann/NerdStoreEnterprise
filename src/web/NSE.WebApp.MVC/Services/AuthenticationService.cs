@@ -13,9 +13,9 @@ public class AuthenticationService : Service, IAuthenticationService
 {
     private readonly HttpClient _httpClient;
     public AuthenticationService(HttpClient httpClient, IOptions<AppSettings> settings)
-    {        
-        _httpClient = httpClient;
-        _httpClient.BaseAddress = new Uri(settings.Value.UrlAuthentication);
+    {
+        httpClient.BaseAddress = new Uri(settings.Value.UrlAuthentication);
+        _httpClient = httpClient;        
     }
     public async Task<UserLoginResponse> Login(UserLoginViewModel userLogin)
     {

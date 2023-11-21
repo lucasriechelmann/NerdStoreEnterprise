@@ -14,17 +14,20 @@ public static class DependencyInjectionConfig
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
         services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 
-        //services.AddHttpClient("Refit", options => options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value));
+        
         services.AddHttpClient<ICatalogService, CatalogService>()
-            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-            //.AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>)
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMicroseconds(600)));
             .AddPolicyHandler(PollyExtensions.WaitRetry())
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<IUser, AspNetUser>();        
+        services.AddScoped<IUser, AspNetUser>();
 
+        #region Refit
+        //services.AddHttpClient("Refit", options => options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value));
+        //    .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+        //    .AddTypedClient(Refit.RestService.For<ICatalogoServiceRefit>);
+        #endregion
         return services;
     }
 }

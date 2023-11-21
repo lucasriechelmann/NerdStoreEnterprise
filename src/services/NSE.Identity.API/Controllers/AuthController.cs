@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using EasyNetQ;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NSE.Core.Messages.Integration;
 using NSE.Identity.API.Models;
 using NSE.WebAPI.Core.Controllers;
 using NSE.WebAPI.Core.Identity;
@@ -16,7 +18,7 @@ public class AuthController : MainController
     private readonly SignInManager<IdentityUser> _signInManager;
     private readonly UserManager<IdentityUser> _userManager;
     private readonly AppSettings _appSettings;
-
+    IBus _bus;
     public AuthController(SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
         IOptions<AppSettings> appSettingsOptions)
     {
@@ -41,12 +43,23 @@ public class AuthController : MainController
 
         if(result.Succeeded)
         {
-            await _signInManager.SignInAsync(user, false);
+            var success = await RegisterCustomer(userRegister);
+
             return CustomResponse(await GetJwt(user.Email));
         }
 
         result.Errors.ToList().ForEach(error => AddError(error.Description));
         return CustomResponse();
+    }
+    async Task<ResponseMessage> RegisterCustomer(UserRegister userRegister)
+    {
+        var user = await _userManager.FindByEmailAsync(userRegister.Email);
+        var userRegistered = new UserRegisteredIntegrationEvent(
+            Guid.Parse(user.Id), userRegister.Name, userRegister.Email, userRegister.Cpf);
+
+        _bus = RabbitHutch.CreateBus("host=localhost:5672");
+        var success = await _bus.Rpc.RequestAsync<UserRegisteredIntegrationEvent, ResponseMessage>(userRegistered);
+        return success;
     }
     [HttpPost("authenticate")]
     public async Task<IActionResult> Login(UserLogin userLogin)
