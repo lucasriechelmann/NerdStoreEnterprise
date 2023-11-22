@@ -1,7 +1,9 @@
-﻿using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
-namespace NSE.WebApp.MVC.Extensions;
-public class AspNetUser : IUser
+namespace NSE.WebAPI.Core.User;
+
+public class AspNetUser : IAspNetUser
 {
     private readonly IHttpContextAccessor _accessor;
     public AspNetUser(IHttpContextAccessor accessor)

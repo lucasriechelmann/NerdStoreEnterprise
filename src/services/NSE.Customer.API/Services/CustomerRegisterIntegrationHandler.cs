@@ -1,33 +1,36 @@
-﻿
-using EasyNetQ;
-using FluentValidation.Results;
-using NSE.Core.Mediator;
+﻿using NSE.Core.Mediator;
 using NSE.Core.Messages.Integration;
 using NSE.Customer.API.Application.Commands;
+using NSE.MessageBus;
 
 namespace NSE.Customer.API.Services;
 public class CustomerRegisterIntegrationHandler : BackgroundService
 {
-    private IBus _bus;
+    private IMessageBus _bus;
     private readonly IServiceProvider _serviceProvider;
 
-    public CustomerRegisterIntegrationHandler(IServiceProvider serviceProvider)
+    public CustomerRegisterIntegrationHandler(IServiceProvider serviceProvider, IMessageBus bus)
     {
         _serviceProvider = serviceProvider;
+        _bus = bus;
     }
+    void SetRespond()
+    {
+        _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request =>
+        {
+            return await CustomerRegister(request);
+        });
 
+        _bus.AdvancedBus.Connected += OnConnect;
+    }
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _bus = RabbitHutch.CreateBus("host=localhost:5672");
-        _bus.Rpc.Respond<UserRegisteredIntegrationEvent, ResponseMessage>(async request =>
-        {
-            return new ResponseMessage(await CustomerRegister(request));
-        });
+        SetRespond();
 
         return Task.CompletedTask;
     }
-
-    private async Task<ValidationResult> CustomerRegister(UserRegisteredIntegrationEvent message)
+    private void OnConnect(object s, EventArgs e) => SetRespond();
+    private async Task<ResponseMessage> CustomerRegister(UserRegisteredIntegrationEvent message)
     {
         var customerCommand = new CustomerRegisterCommand(message.Id, message.Name, message.Email, message.Cpf);
 
@@ -35,6 +38,6 @@ public class CustomerRegisterIntegrationHandler : BackgroundService
         var mediator = scope.ServiceProvider.GetRequiredService<IMediatorHandler>();
         var success = await mediator.SendCommand(customerCommand);
 
-        return success;
+        return new ResponseMessage(success);
     }
 }

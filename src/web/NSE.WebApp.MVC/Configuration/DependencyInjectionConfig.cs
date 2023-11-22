@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc.DataAnnotations;
+using NSE.WebAPI.Core.User;
 using NSE.WebApp.MVC.Extensions;
 using NSE.WebApp.MVC.Services;
 using NSE.WebApp.MVC.Services.Handlers;
 using Polly;
-using Polly.Extensions.Http;
 
 namespace NSE.WebApp.MVC.Configuration;
 public static class DependencyInjectionConfig
@@ -21,7 +21,7 @@ public static class DependencyInjectionConfig
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<IUser, AspNetUser>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
 
         #region Refit
         //services.AddHttpClient("Refit", options => options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value));
