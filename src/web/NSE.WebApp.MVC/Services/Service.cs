@@ -39,4 +39,5 @@ public abstract class Service
             {
                 PropertyNameCaseInsensitive = true
             };
+    protected ResponseResult OkReturn() => new ResponseResult();
 }

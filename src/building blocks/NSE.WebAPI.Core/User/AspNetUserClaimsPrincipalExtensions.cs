@@ -8,7 +8,7 @@ public static class AspNetUserClaimsPrincipalExtensions
         if (principal == null)
             throw new ArgumentException(nameof(principal));
 
-        var claim = principal.FindFirst("email");
+        var claim = principal.FindFirst(ClaimTypes.Email);
 
         return claim?.Value;
     }
@@ -17,7 +17,7 @@ public static class AspNetUserClaimsPrincipalExtensions
         if (principal == null)
             throw new ArgumentException(nameof(principal));
 
-        var claim = principal.FindFirst("sub");
+        var claim = principal.FindFirst(ClaimTypes.NameIdentifier);
 
         return claim?.Value;
     }

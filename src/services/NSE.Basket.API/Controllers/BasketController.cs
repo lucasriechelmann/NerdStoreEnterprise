@@ -28,7 +28,7 @@ public class BasketController : MainController
     {
         var basket = await GetBasketCustomer();
 
-        if (basket == null)
+        if (basket is null)
             ManipulateNewBasket(item);
         else
             ManipulateExistingBasket(basket, item);
@@ -44,7 +44,7 @@ public class BasketController : MainController
     {
         var basket = await GetBasketCustomer();
         var basketItem = await GetBasketItemValidated(productId, basket, item);
-        if (basketItem == null) return CustomResponse();
+        if (basketItem is null) return CustomResponse();
 
         basket.UpdateUnits(basketItem, item.Quantity);
 

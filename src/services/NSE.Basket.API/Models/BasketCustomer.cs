@@ -28,6 +28,8 @@ public class BasketCustomer
 
     internal void AddItem(BasketItem item)
     {
+        if(!item.IsValid()) return;
+
         item.AssociateBasket(Id);
 
         if (BasketExistingItem(item))

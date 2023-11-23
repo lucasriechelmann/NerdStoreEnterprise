@@ -11,17 +11,23 @@ public static class DependencyInjectionConfig
     public static IServiceCollection RegisterServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.AddScoped<IAspNetUser, AspNetUser>();
+
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
         services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 
         
         services.AddHttpClient<ICatalogService, CatalogService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMicroseconds(600)));
             .AddPolicyHandler(PollyExtensions.WaitRetry())
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
-        services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-        services.AddScoped<IAspNetUser, AspNetUser>();
+        services.AddHttpClient<IBasketService, BasketService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()            
+            .AddPolicyHandler(PollyExtensions.WaitRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));        
 
         #region Refit
         //services.AddHttpClient("Refit", options => options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value));

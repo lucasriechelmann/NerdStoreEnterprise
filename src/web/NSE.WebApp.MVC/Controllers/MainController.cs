@@ -7,7 +7,8 @@ namespace NSE.WebApp.MVC.Controllers
     {
         protected bool ResponseHasErrors(ResponseResult response)
         {
-            if(response == null || !response.Errors.Messages.Any()) return false;
+            if(response == null || !response.Errors.Messages.Any()) 
+                return false;
 
             foreach(var message in response.Errors.Messages)
             {
@@ -16,5 +17,7 @@ namespace NSE.WebApp.MVC.Controllers
 
             return true;
         }
+        protected void AddError(string message) => ModelState.AddModelError(string.Empty, message);
+        protected bool IsOperationValid() => ModelState.ErrorCount == 0;
     }
 }

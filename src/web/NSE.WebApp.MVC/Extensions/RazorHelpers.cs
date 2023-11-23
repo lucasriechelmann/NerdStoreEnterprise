@@ -26,4 +26,21 @@ public static class RazorHelpers
     {
         return quantity > 0 ? $"Only {quantity} in stock!" : "Product out of stock!";
     }
+    public static string UnitsPerProduct(this RazorPage page, int units)
+    {
+        return units > 1 ? $"{units} units" : $"{units} unit";
+    }
+
+    public static string SelectOptionsByQuantity(this RazorPage page, int quantity, int selectedValue = 0)
+    {
+        var sb = new StringBuilder();
+        for (var i = 1; i <= quantity; i++)
+        {
+            var selected = "";
+            if (i == selectedValue) selected = "selected";
+            sb.Append($"<option {selected} value='{i}'>{i}</option>");
+        }
+
+        return sb.ToString();
+    }
 }
