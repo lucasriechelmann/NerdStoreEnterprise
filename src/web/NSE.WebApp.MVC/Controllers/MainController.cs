@@ -7,7 +7,7 @@ namespace NSE.WebApp.MVC.Controllers
     {
         protected bool ResponseHasErrors(ResponseResult response)
         {
-            if(response == null || !response.Errors.Messages.Any()) 
+            if(response == null || response.Errors is null || !response.Errors.Messages.Any()) 
                 return false;
 
             foreach(var message in response.Errors.Messages)

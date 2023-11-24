@@ -19,6 +19,9 @@ public static class AspNetUserClaimsPrincipalExtensions
 
         var claim = principal.FindFirst("sub");
 
+        if (claim?.Value == null)
+            claim = principal.FindFirst(ClaimTypes.NameIdentifier);
+
         return claim?.Value;
     }
     public static string GetUserToken(this ClaimsPrincipal principal)

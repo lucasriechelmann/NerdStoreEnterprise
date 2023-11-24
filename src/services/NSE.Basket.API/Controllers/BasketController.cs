@@ -39,7 +39,7 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpPut("basket/{produtoId}")]
+    [HttpPut("basket/{productId}")]
     public async Task<IActionResult> UpdateBasketItem(Guid productId, BasketItem item)
     {
         var basket = await GetBasketCustomer();
@@ -58,7 +58,7 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpDelete("basket/{produtoId}")]
+    [HttpDelete("basket/{productId}")]
     public async Task<IActionResult> RemoveBasketItem(Guid productId)
     {
         var basket = await GetBasketCustomer();
