@@ -21,7 +21,7 @@ public static class ApiConfig
     {
         if (environment.IsDevelopment())
         {
-
+            app.UseDeveloperExceptionPage();
         }
 
         app.UseHttpsRedirection();
