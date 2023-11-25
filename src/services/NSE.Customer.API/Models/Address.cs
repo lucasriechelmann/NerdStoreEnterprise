@@ -2,7 +2,7 @@
 
 namespace NSE.Customer.API.Models;
 
-public class Address : Entity, IAgregateRoot
+public class Address : Entity, IAggregateRoot
 {
     protected Address() 
     { 

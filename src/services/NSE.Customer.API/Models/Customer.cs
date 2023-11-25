@@ -2,7 +2,7 @@
 
 namespace NSE.Customer.API.Models;
 
-public class Customer : Entity, IAgregateRoot
+public class Customer : Entity, IAggregateRoot
 {
     protected Customer() { }
     public Customer(Guid guid, string name, string email, string cpf)
