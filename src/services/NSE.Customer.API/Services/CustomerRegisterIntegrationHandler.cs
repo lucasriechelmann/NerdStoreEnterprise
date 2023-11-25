@@ -13,7 +13,14 @@ public class CustomerRegisterIntegrationHandler : BackgroundService
     {
         _serviceProvider = serviceProvider;
         _bus = bus;
+    }    
+    protected override Task ExecuteAsync(CancellationToken stoppingToken)
+    {
+        SetRespond();
+
+        return Task.CompletedTask;
     }
+    private void OnConnect(object s, EventArgs e) => SetRespond();
     void SetRespond()
     {
         _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request =>
@@ -23,13 +30,6 @@ public class CustomerRegisterIntegrationHandler : BackgroundService
 
         _bus.AdvancedBus.Connected += OnConnect;
     }
-    protected override Task ExecuteAsync(CancellationToken stoppingToken)
-    {
-        SetRespond();
-
-        return Task.CompletedTask;
-    }
-    private void OnConnect(object s, EventArgs e) => SetRespond();
     private async Task<ResponseMessage> CustomerRegister(UserRegisteredIntegrationEvent message)
     {
         var customerCommand = new CustomerRegisterCommand(message.Id, message.Name, message.Email, message.Cpf);

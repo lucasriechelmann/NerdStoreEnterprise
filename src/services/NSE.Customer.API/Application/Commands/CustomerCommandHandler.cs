@@ -5,7 +5,9 @@ using NSE.Customer.API.Application.Events;
 using NSE.Customer.API.Models;
 
 namespace NSE.Customer.API.Application.Commands;
-public class CustomerCommandHandler : CommandHandler, IRequestHandler<CustomerRegisterCommand, ValidationResult>
+public class CustomerCommandHandler : CommandHandler, 
+    IRequestHandler<CustomerRegisterCommand, ValidationResult>,
+    IRequestHandler<AddressAddCommand, ValidationResult>
 {
     private readonly ICustomerRepository _customerRepository;
 
