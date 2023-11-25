@@ -19,5 +19,8 @@ public class CustomerRepository : ICustomerRepository
         await _context.Customers.AsNoTracking().ToListAsync();
     public async Task<Models.Customer> GetByCpf(string cpf) =>
         await _context.Customers.FirstOrDefaultAsync(c => c.Cpf.Number == cpf);
+    public void AddAddress(Address address) => _context.Addresses.Add(address);
+    public async Task<Address> GetAddressById(Guid id) =>
+         await _context.Addresses.FirstOrDefaultAsync(e => e.CustomerId == id);
     public void Dispose() => _context.Dispose();
 }

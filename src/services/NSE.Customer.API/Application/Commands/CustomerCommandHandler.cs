@@ -34,4 +34,14 @@ public class CustomerCommandHandler : CommandHandler, IRequestHandler<CustomerRe
 
         return await PersistData(_customerRepository.UnitOfWork);
     }
+    public async Task<ValidationResult> Handle(AddressAddCommand message, CancellationToken cancellationToken)
+    {
+        if (!message.IsValid()) return message.ValidationResult;
+
+        var address = new Address(message.Street, message.Number, message.Complement, message.District, message.ZipCode, message.City, message.State, message.CustomerId);
+
+        _customerRepository.AddAddress(address);
+
+        return await PersistData(_customerRepository.UnitOfWork);
+    }
 }

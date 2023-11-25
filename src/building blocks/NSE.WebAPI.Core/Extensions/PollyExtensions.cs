@@ -1,4 +1,5 @@
-﻿using Polly.Extensions.Http;
+﻿using Polly;
+using Polly.Extensions.Http;
 using Polly.Retry;
 
 namespace NSE.WebAPI.Core.Extensions;

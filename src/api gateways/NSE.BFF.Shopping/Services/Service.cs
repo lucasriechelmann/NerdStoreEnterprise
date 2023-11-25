@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 using System.Text;
 using System.Net;
+using NSE.Core.Communication;
 
 namespace NSE.BFF.Shopping.Services;
 
@@ -30,4 +31,5 @@ public class Service
             {
                 PropertyNameCaseInsensitive = true
             };
+    protected ResponseResult OkReturn() => new ResponseResult();
 }

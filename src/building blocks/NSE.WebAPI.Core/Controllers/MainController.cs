@@ -1,6 +1,7 @@
 ﻿using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using NSE.Core.Communication;
 
 namespace NSE.WebAPI.Core.Controllers;
 [ApiController]
@@ -32,6 +33,17 @@ public abstract class MainController : Controller
             AddError(error.ErrorMessage);
 
         return CustomResponse();
+    }
+    protected bool IsThereAnyErrors(ResponseResult response)
+    {
+        if (response == null || response.Errors is null || !response.Errors.Messages.Any()) return false;
+
+        foreach (var mensagem in response.Errors.Messages)
+        {
+            AddError(mensagem);
+        }
+
+        return true;
     }
     protected bool IsOperationValid() => !Errors.Any();
     protected void AddError(string error) => Errors.Add(error);

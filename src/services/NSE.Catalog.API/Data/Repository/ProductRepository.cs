@@ -18,6 +18,20 @@ public class ProductRepository : IProductRepository
     }
     public IUnitOfWork UnitOfWork => _context;
     public async Task<Product> GetById(Guid id) => await _context.Products.FindAsync(id);
+    public async Task<IEnumerable<Product>> GetProductsById(string ids)
+    {
+        var productsIds = ids
+            .Split(',')
+            .Select(id => (Ok: Guid.TryParse(id, out var x), Value: x));
+
+        if (!productsIds.All(p => p.Ok))
+            return new List<Product>();
+
+        var idsValue = productsIds.Select(id => id.Value);
+
+        return await _context.Products.AsNoTracking()
+            .Where(p => idsValue.Contains(p.Id) && p.Active).ToListAsync();
+    }
     public void Add(Product product) => _context.Products.Add(product);
     public void Update(Product product) => _context.Products.Update(product);
     public void Dispose() => _context?.Dispose();

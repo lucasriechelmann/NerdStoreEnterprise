@@ -7,7 +7,8 @@ public class Address : Entity, IAgregateRoot
     protected Address() 
     { 
     }
-    public Address(string street, string number, string complement, string district, string zipCode, string city, string state)
+    public Address(string street, string number, string complement, string district, string zipCode, 
+        string city, string state, Guid customerId)
     {
         Street = street;
         Number = number;
@@ -16,6 +17,7 @@ public class Address : Entity, IAgregateRoot
         ZipCode = zipCode;
         City = city;
         State = state;
+        CustomerId = customerId;
     }
 
     public string Street { get; private set; }

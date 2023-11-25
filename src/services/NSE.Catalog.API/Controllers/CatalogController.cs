@@ -17,15 +17,12 @@ namespace NSE.Catalog.API.Controllers
         }
         [AllowAnonymous]
         [HttpGet("catalog/products")]
-        public async Task<IEnumerable<Product>> Index()
-        {
-            return await _productRepository.GetAll();
-        }
+        public async Task<IEnumerable<Product>> Index() => await _productRepository.GetAll();
         //[ClaimsAuthorize("Catalog", "Read")]
         [HttpGet("catalog/products/{id}")]
-        public async Task<Product> ProductDetail(Guid id)
-        {
-            return await _productRepository.GetById(id);
-        }
+        public async Task<Product> ProductDetail(Guid id) => await _productRepository.GetById(id);
+        [HttpGet("catalog/products/list/{ids}")]
+        public async Task<IEnumerable<Product>> GetProductsById(string ids) =>
+            await _productRepository.GetProductsById(ids);
     }
 }
