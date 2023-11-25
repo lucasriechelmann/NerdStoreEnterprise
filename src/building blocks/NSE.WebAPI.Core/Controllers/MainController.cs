@@ -34,6 +34,12 @@ public abstract class MainController : Controller
 
         return CustomResponse();
     }
+    protected IActionResult CustomResponse(ResponseResult response)
+    {
+        IsThereAnyErrors(response);
+
+        return CustomResponse();
+    }
     protected bool IsThereAnyErrors(ResponseResult response)
     {
         if (response == null || response.Errors is null || !response.Errors.Messages.Any()) return false;

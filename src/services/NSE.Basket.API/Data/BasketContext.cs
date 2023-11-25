@@ -29,10 +29,30 @@ public sealed class BasketContext : DbContext
             .HasDatabaseName("IDX_Cliente");
 
         modelBuilder.Entity<BasketCustomer>()
+            .Ignore(c => c.Voucher)
+            .OwnsOne(c => c.Voucher, voucher =>
+            {
+                voucher.Property(c => c.Code)
+                    .HasColumnName("VoucherCode")
+                    .HasColumnType("varchar(50)");
+
+                voucher.Property(c => c.Percent)
+                    .HasColumnName("VoucherPercent");
+
+                voucher.Property(c => c.DiscountType)
+                    .HasColumnName("VoucherDiscountType");
+
+                voucher.Property(c => c.Value)
+                    .HasColumnName("VoucherValue");
+            });
+
+        modelBuilder.Entity<BasketCustomer>()
             .HasMany(c => c.Items)
             .WithOne(i => i.BasketCustomer)
             .HasForeignKey(c => c.BasketId);
 
-        foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys())) relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
+        foreach (var relationship in modelBuilder.Model.GetEntityTypes()
+            .SelectMany(e => e.GetForeignKeys())) 
+            relationship.DeleteBehavior = DeleteBehavior.ClientSetNull;
     }
 }

@@ -13,6 +13,9 @@ public class BasketCustomer
     public decimal TotalValue { get; set; }
     public List<BasketItem> Items { get; set; } = new List<BasketItem>();
     public ValidationResult ValidationResult { get; set; }
+    public bool VoucherUsed { get; set; }
+    public decimal Discount { get; set; }
+    public Voucher Voucher { get; set; }
 
     public BasketCustomer(Guid clienteId)
     {
@@ -21,8 +24,51 @@ public class BasketCustomer
     }
 
     public BasketCustomer() { }
+    public void ApplyVoucher(Voucher voucher)
+    {
+        Voucher = voucher;
+        VoucherUsed = true;
+        CalculateBasketValue();
+    }
 
-    internal void CalculateBasketValue() => TotalValue = Items.Sum(p => p.CalculateValue());
+    internal void CalculateBasketValue()
+    {
+        TotalValue = Items.Sum(p => p.CalculateValue());
+        CalculateTotalDiscountValue();
+    }
+    internal void CalculateTotalDiscountValue()
+    {
+        if (!VoucherUsed) return;
+
+        decimal discount = 0;
+        var value = TotalValue;
+
+        if (Voucher.DiscountType == DiscountTypeVoucher.Percent)
+        {
+            if (Voucher.Percent.HasValue)
+            {
+                if (Voucher.Percent.Value > 100)
+                    Voucher.Percent = 100;
+
+                discount = (value * Voucher.Percent.Value) / 100;
+                value -= discount;
+            }
+        }
+        else
+        {
+            if (Voucher.Value.HasValue)
+            {
+                if (Voucher.Value.Value > value)
+                    Voucher.Value = value;
+
+                discount = Voucher.Value.Value;
+                value -= discount;
+            }
+        }
+
+        TotalValue = value < 0 ? 0 : value;
+        Discount = discount;
+    }
     internal bool BasketExistingItem(BasketItem item) => Items.Any(p => p.ProductId == item.ProductId);
     internal BasketItem GetProductById(Guid productId) => Items.FirstOrDefault(p => p.ProductId == productId);
 

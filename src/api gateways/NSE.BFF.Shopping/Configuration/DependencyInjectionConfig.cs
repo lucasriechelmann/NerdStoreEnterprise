@@ -37,5 +37,11 @@ public static class DependencyInjectionConfig
             .AddPolicyHandler(PollyExtensions.WaitRetry())
             .AddTransientHttpErrorPolicy(
                 p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+        services.AddHttpClient<IPaymentService, PaymentService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(PollyExtensions.WaitRetry())
+            .AddTransientHttpErrorPolicy(
+                p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
     }
 }

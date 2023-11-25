@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 
 namespace NSE.WebAPI.Core.Identity;
-public class CustomAuthorize
+public class CustomAuthorization
 {
     public static bool ValidateClaimsUser(HttpContext context, string claimName, string claimValue)
     {

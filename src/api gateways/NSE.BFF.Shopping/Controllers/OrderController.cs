@@ -32,7 +32,8 @@ namespace NSE.BFF.Shopping.Controllers
             var products = await _catalogService.GetItems(basket.Items.Select(p => p.ProductId));
             var address = await _customerService.GetAddress();
 
-            if (!await ValidateBasketProducts(basket, products)) return CustomResponse();
+            if (!await ValidateBasketProducts(basket, products)) 
+                return CustomResponse();
 
             PopulateOrderData(basket, address, order);
 

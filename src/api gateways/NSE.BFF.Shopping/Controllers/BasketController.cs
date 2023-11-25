@@ -70,9 +70,9 @@ namespace NSE.BFF.Shopping.Controllers
         [Route("shopping/basket/items/{productId}")]
         public async Task<IActionResult> RemoveBasketItem(Guid productId)
         {
-            var produto = await _catalogService.GetById(productId);
+            var product = await _catalogService.GetById(productId);
 
-            if (produto == null)
+            if (product == null)
             {
                 AddError("Produto inexistente!");
                 return CustomResponse();

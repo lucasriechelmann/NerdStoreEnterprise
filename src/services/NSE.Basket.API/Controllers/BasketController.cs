@@ -17,13 +17,15 @@ public class BasketController : MainController
         _context = context;
     }
 
-    [HttpGet("basket")]
+    [HttpGet]
+    [Route("basket")]
     public async Task<BasketCustomer> GetBasket()
     {
         return await GetBasketCustomer() ?? new BasketCustomer();
     }
 
-    [HttpPost("basket")]
+    [HttpPost]
+    [Route("basket")]
     public async Task<IActionResult> AddItemBasket(BasketItem item)
     {
         var basket = await GetBasketCustomer();
@@ -39,7 +41,8 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpPut("basket/{productId}")]
+    [HttpPut]
+    [Route("basket/{productId}")]
     public async Task<IActionResult> UpdateBasketItem(Guid productId, BasketItem item)
     {
         var basket = await GetBasketCustomer();
@@ -58,7 +61,8 @@ public class BasketController : MainController
         return CustomResponse();
     }
 
-    [HttpDelete("basket/{productId}")]
+    [HttpDelete]
+    [Route("basket/{productId}")]
     public async Task<IActionResult> RemoveBasketItem(Guid productId)
     {
         var basket = await GetBasketCustomer();
@@ -77,7 +81,18 @@ public class BasketController : MainController
         await PersistData();
         return CustomResponse();
     }
+    [HttpPost]
+    [Route("basket/apply-voucher")]
+    public async Task<IActionResult> ApplyVoucher([FromBody] Voucher voucher)
+    {
+        var basket = await GetBasketCustomer();
+        basket.ApplyVoucher(voucher);
 
+        _context.BasketCustomers.Update(basket);
+        await PersistData();
+
+        return CustomResponse();
+    }
     private async Task<BasketCustomer> GetBasketCustomer()
     {
         return await _context.BasketCustomers

@@ -21,7 +21,7 @@ public class RequirementClaimFilter : IAuthorizationFilter
             return;
         }
 
-        if (!CustomAuthorize.ValidateClaimsUser(context.HttpContext, _claim.Type, _claim.Value))
+        if (!CustomAuthorization.ValidateClaimsUser(context.HttpContext, _claim.Type, _claim.Value))
         {
             context.Result = new StatusCodeResult(403);
         }

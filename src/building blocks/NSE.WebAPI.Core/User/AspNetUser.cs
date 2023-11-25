@@ -10,12 +10,13 @@ public class AspNetUser : IAspNetUser
     {
         _accessor = accessor;
     }
-    public string Name => _accessor.HttpContext.User.Identity.Name;
-    public IEnumerable<Claim> GetClaims() => _accessor.HttpContext.User.Claims;
-    public HttpContext GetHttpContext() => _accessor.HttpContext;
-    public string GetUserEmail() => IsAuthenticated() ? _accessor.HttpContext.User.GetUserEmail() : "";
-    public Guid GetUserId() => IsAuthenticated() ? Guid.Parse(_accessor.HttpContext.User.GetUserId()) : Guid.Empty;
-    public string GetUserToken() => IsAuthenticated() ? _accessor.HttpContext.User.GetUserToken() : "";
-    public bool HasRole(string role) => _accessor.HttpContext.User.IsInRole(role);
-    public bool IsAuthenticated() => _accessor.HttpContext.User.Identity.IsAuthenticated;
+    public string Name => _httpContext.User.Identity.Name;
+    public IEnumerable<Claim> GetClaims() => _httpContext.User.Claims;
+    public HttpContext GetHttpContext() => _httpContext;
+    public string GetUserEmail() => IsAuthenticated() ? _httpContext.User.GetUserEmail() : "";
+    public Guid GetUserId() => IsAuthenticated() ? Guid.Parse(_httpContext.User.GetUserId()) : Guid.Empty;
+    public string GetUserToken() => IsAuthenticated() ? _httpContext.User.GetUserToken() : "";
+    public bool HasRole(string role) => _httpContext.User.IsInRole(role);
+    public bool IsAuthenticated() => _httpContext.User.Identity.IsAuthenticated;
+    HttpContext _httpContext => _accessor.HttpContext;
 }
