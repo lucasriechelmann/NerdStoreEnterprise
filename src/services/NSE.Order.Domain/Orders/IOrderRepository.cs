@@ -5,6 +5,7 @@ namespace NSE.Order.Domain.Orders;
 public interface IOrderRepository : IRepository<Order>
 {
     Task<Order> GetById(Guid id);
+    Task<Order> GetLastOrder(Guid customerId);
     Task<IEnumerable<Order>> GetListByCustomerId(Guid customerId);
     void Add(Order order);
     void Update(Order order);

@@ -1,11 +1,11 @@
 ﻿namespace NSE.Order.Domain.Orders;
 public class Address
 {
-    public string Street { get; private set; }
-    public string Number { get; private set; }
-    public string Complement { get; private set; }
-    public string District { get; private set; }
-    public string ZipCode { get; private set; }
-    public string City { get; private set; }
-    public string State { get; private set; }
+    public string Street { get; set; }
+    public string Number { get; set; }
+    public string Complement { get; set; }
+    public string District { get; set; }
+    public string ZipCode { get; set; }
+    public string City { get; set; }
+    public string State { get; set; }
 }

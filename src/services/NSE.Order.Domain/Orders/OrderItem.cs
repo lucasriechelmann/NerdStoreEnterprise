@@ -1,4 +1,4 @@
-﻿using NetDevPack.Domain;
+﻿using NSE.Core.DomainObjects;
 
 namespace NSE.Order.Domain.Orders;
 public class OrderItem : Entity

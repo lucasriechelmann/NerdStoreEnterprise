@@ -27,7 +27,7 @@ public class Order : Entity, IAggregateRoot
     public decimal Discount { get; private set; }
     public decimal TotalValue { get; private set; }
     public DateTime RegisterDate { get; private set; }
-    public OrderStatus OrderStatus { get; private set; }
+    public OrderStatus Status { get; private set; }
 
     private readonly List<OrderItem> _orderItems;
     public IReadOnlyCollection<OrderItem> OrderItems => _orderItems;
@@ -37,7 +37,7 @@ public class Order : Entity, IAggregateRoot
     // EF Rel.
     public Voucher Voucher { get; private set; }
 
-    public void AutorizarPedido() => OrderStatus = OrderStatus.Authorized;
+    public void AutorizarPedido() => Status = OrderStatus.Authorized;
     public void ApplyVoucher(Voucher voucher)
     {
         VoucherUsed = true;
