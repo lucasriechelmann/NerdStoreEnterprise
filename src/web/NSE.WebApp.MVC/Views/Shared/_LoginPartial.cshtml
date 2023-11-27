@@ -13,8 +13,8 @@
                 <img class="icon icon-sm rounded-circle" src="https://s.gravatar.com/avatar/@this.HashEmailForGravatar(AppUser.GetUserEmail())?d=mm&s=45" alt="User Avatar">
             </button> <!-- iconbox // -->
             <ul class="dropdown-menu dropdown-menu-end">
-                <li><a class="dropdown-item" href="#">My Profile</a></li>
-                <li><a class="dropdown-item" href="#">My Orders</a></li>
+                <a class="dropdown-item" href="#">My Profile</a>
+                <a class="dropdown-item" asp-controller="Order" asp-action="MyOrders">My Orders</a>
                 <li><hr class="dropdown-divider"></li>
                 <li><a class="dropdown-item" asp-controller="Identity" asp-action="Logout">Logout</a></li>
             </ul>

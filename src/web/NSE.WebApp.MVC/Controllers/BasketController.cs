@@ -7,33 +7,22 @@ namespace NSE.WebApp.MVC.Controllers;
 [Authorize]
 public class BasketController : MainController
 {
-    IBasketService _basketService;
-    ICatalogService _catalogService;
+    readonly IShoppingBffService _shoppingBffService;
 
-    public BasketController(IBasketService basketService, ICatalogService catalogService)
+    public BasketController(IShoppingBffService shoppingBffService)
     {
-        _basketService = basketService;
-        _catalogService = catalogService;
+        _shoppingBffService = shoppingBffService;
     }
+
     [Route("basket")]
-    public async Task<IActionResult> Index() => View(await _basketService.GetBasket());
+    public async Task<IActionResult> Index() => View(await _shoppingBffService.GetBasket());
     [Route("basket/add-item")]
     public async Task<IActionResult> AddBasketItem(BasketItemViewModel item)
     {
-        var product = await _catalogService.GetById(item.ProductId);
-        ValidateBasketItem(product, item.Quantity);
-        
-        if(!IsOperationValid()) 
-            return View("Index", await _basketService.GetBasket());
-
-        item.Name = product.Name;
-        item.Value = product.Value;
-        item.Image = product.Image;
-
-        var response = await _basketService.AddBasketItem(item);
-
+        var response = await _shoppingBffService.AddBasketItem(item);
+       
         if (ResponseHasErrors(response)) 
-            return View("Index", await _basketService.GetBasket());
+            return View("Index", await _shoppingBffService.GetBasket());
 
         return RedirectToAction("Index");
     }
@@ -41,17 +30,11 @@ public class BasketController : MainController
     [Route("basket/update-item")]
     public async Task<IActionResult> UpdateBasketItem(Guid productId, int quantity)
     {
-        var product = await _catalogService.GetById(productId);
-        ValidateBasketItem(product, quantity);
-
-        if (!IsOperationValid())
-            return View("Index", await _basketService.GetBasket());
-
         var item = new BasketItemViewModel { ProductId = productId, Quantity = quantity };
-        var response = await _basketService.UpdateBasketItem(productId, item);
+        var response = await _shoppingBffService.UpdateBasketItem(productId, item);
 
         if (ResponseHasErrors(response))
-            return View("Index", await _basketService.GetBasket());
+            return View("Index", await _shoppingBffService.GetBasket());
 
         return RedirectToAction("Index");
     }
@@ -59,24 +42,22 @@ public class BasketController : MainController
     [Route("basket/remove-item")]
     public async Task<IActionResult> RemoveBasketItem(Guid productId)
     {
-        var product = await _catalogService.GetById(productId);
-        if (product == null)
-        {
-            AddError("Non-existent product!");
-            return RedirectToAction("Index", await _basketService.GetBasket());
-        }            
-
-        var response = await _basketService.RemoveBasketItem(productId);
+        var response = await _shoppingBffService.RemoveBasketItem(productId);
 
         if (ResponseHasErrors(response))
-            return View("Index", await _basketService.GetBasket());
+            return View("Index", await _shoppingBffService.GetBasket());
 
         return RedirectToAction("Index");
     }
-    private void ValidateBasketItem(ProductViewModel product, int quantity)
+    [HttpPost]
+    [Route("basket/apply-voucher")]
+    public async Task<IActionResult> ApplyVoucher(string voucherCode)
     {
-        if (product == null) AddError("Non-existent product!");
-        if (quantity < 1) AddError($"Choose at least one unit of the product produto {product.Name}");
-        if (quantity > product.StockQuantity) AddError($"The product {product.Name} has {product.StockQuantity} units in stock, você selected {quantity}");
+        var response = await _shoppingBffService.ApplyBasketVoucher(voucherCode);
+
+        if (ResponseHasErrors(response))
+            return View("Index", await _shoppingBffService.GetBasket());
+
+        return RedirectToAction("Index");
     }
 }

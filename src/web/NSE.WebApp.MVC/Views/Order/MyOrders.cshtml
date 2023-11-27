@@ -1,0 +1,67 @@
+﻿@using NSE.WebApp.MVC.Extensions
+@model IEnumerable<NSE.WebApp.MVC.Models.OrderViewModel>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<section class="padding-y">
+    <div class="container">
+        @{
+            foreach (var order in Model.OrderBy(p => p.Date))
+            {
+                <div class="col-md-12" style="padding-bottom: 35px">
+                    <article class="card">
+                        <header class="card-header">
+                            <b class="d-inline-block mr-3">Order ID: #@order.Code @Html.Raw(this.ShowStatus(order.Status))</b>
+                            <span>@order.Date.ToLongDateString()</span>
+                        </header>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <h6 class="text-muted">Payment</h6>
+                                    <span class="text-success">
+                                        <i class="fas fa-credit-card"></i>
+                                        Transaction in credit card
+                                    </span>
+
+                                    <p>
+                                        <span class="b">Total:  @this.CurrencyFormat(order.TotalValue)</span>
+                                    </p>
+
+                                </div>
+                                <div class="col-md-8">
+                                    <h6 class="text-muted">Delivery Address</h6>
+                                    <p>
+                                        @order.Address.ToString()
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <ul class="row">
+                                @{
+                                    foreach (var item in order.OrderItems)
+                                    {
+                                        <li class="col-md-4">
+                                            <figure class="itemside  mb-3">
+                                                <div class="aside">
+                                                    <img src="~/images/products/@item.Image" alt="@item.ProductName" class="border img-xs">
+                                                </div>
+                                                <figcaption class="info">
+                                                    <p>
+                                                        <b>@item.ProductName</b>
+                                                    </p>
+                                                    <span>@this.UnitsByTotalValueProduct(item.Quantity, item.UnitValue) </span>
+                                                </figcaption>
+                                            </figure>
+                                        </li>
+                                    }
+                                }
+                            </ul>
+                        </div>
+                    </article>
+                </div>
+            }
+        }
+    </div>
+</section>

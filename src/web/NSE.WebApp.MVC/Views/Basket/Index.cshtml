@@ -2,7 +2,7 @@
 @model NSE.WebApp.MVC.Models.BasketViewModel
 
 @{
-    ViewData["Title"] = "My basket";
+    ViewData["Title"] = "My shopping basket";
 }
 
 <section class="padding-y">
@@ -47,31 +47,31 @@
                                                 <td>
                                                     <div class="price-wrap">
                                                         <var class="price"> @this.CurrencyFormat(item.Value * item.Quantity)</var>
-                                                        <small class="text-muted"> @this.CurrencyFormat(item.Value) cada</small>
+                                                        <small class="text-muted"> @this.CurrencyFormat(item.Value) each</small>
                                                     </div>
                                                 </td>
                                                 <form method="post" asp-controller="Basket" asp-action="UpdateBasketItem">
-                                                    <td>
+                                                <td>
 
-                                                        <input type="hidden" id="ProductId" name="ProductId" value="@item.ProductId" />
+                                                    <input type="hidden" id="ProductId" name="ProductId" value="@item.ProductId" />
 
-                                                        <div class="text-left">
-                                                            <select id="Quantity" name="Quantity" style="width: 80px" class="form-control">
+                                                    <div class="text-left">
+                                                        <select id="Quantity" name="Quantity" style="width: 80px" class="form-control">
                                                                 @{
                                                                     @Html.Raw(this.SelectOptionsByQuantity(5, item.Quantity))
                                                                 }
-                                                            </select>
-                                                        </div>
+                                                        </select>
+                                                    </div>
 
 
-                                                    </td>
-                                                    <td>
-                                                        <div class="text-right">
-                                                            <button type="submit" class="btn btn-success">
-                                                                <i class="fas fa-sync"></i>
-                                                            </button>
-                                                        </div>
-                                                    </td>
+                                                </td>
+                                                <td>
+                                                    <div class="text-right">
+                                                        <button type="submit" class="btn btn-success">
+                                                            <i class="fas fa-sync"></i>
+                                                        </button>
+                                                    </div>
+                                                </td>
                                                 </form>
                                                 <td>
                                                     <form method="post" asp-controller="Basket" asp-action="RemoveBasketItem">
@@ -94,8 +94,8 @@
                             </table>
 
                             <div class="card-body border-top">
-                                <a href="#" class="btn btn-primary float-md-right"> Finish shopping <i class="fa fa-chevron-right"></i> </a>
-                                <a asp-controller="Catalog" asp-action="Index" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue buying </a>
+                                <a asp-controller="Order" asp-action="DeliveryAddress" class="btn btn-primary float-md-right"> Finish Order <i class="fa fa-chevron-right"></i> </a>
+                                <a asp-controller="Catalog" asp-action="Index" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Continue shopping </a>
                             </div>
                         </div>
 
@@ -104,13 +104,14 @@
                     <aside class="col-md-3">
                         <div class="card mb-3">
                             <div class="card-body">
-                                <form>
+                                <form asp-action="ApplyVoucher">
                                     <div class="form-group">
-                                        <label>Do you have a coupon?</label>
+                                        <label>Do you have Voucher?</label>
+
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="" placeholder="Discount coupon">
+                                            <input type="text" class="form-control" name="VoucherCode" id="VoucherCode" value="@Model.Voucher?.Code" placeholder="Voucher Discount">
                                             <span class="input-group-append">
-                                                <button class="btn btn-primary">Apply</button>
+                                                <button type="submit" class="btn btn-primary">Apply</button>
                                             </span>
                                         </div>
                                     </div>
@@ -119,14 +120,19 @@
                         </div>
                         <div class="card">
                             <div class="card-body">
-                                <dl class="dlist-align">
-                                    <dt>Total Value:</dt>
-                                    <dd class="text-right">@this.CurrencyFormat(Model.TotalValue)</dd>
-                                </dl>
-                                <dl class="dlist-align">
-                                    <dt>Discount:</dt>
-                                    <dd class="text-right">R$ 0,00</dd>
-                                </dl>
+                                @{
+                                    if (Model.VoucherUsed)
+                                    {
+                                        <dl class="dlist-align">
+                                            <dt>Original Value:</dt>
+                                            <dd class="text-right">@this.CurrencyFormat(Model.TotalValue + Model.Discount)</dd>
+                                        </dl>
+                                        <dl class="dlist-align" style="color:green">
+                                            <dt>Discount:</dt>
+                                            <dd class="text-right">@this.CurrencyFormat(Model.Discount)</dd>
+                                        </dl>
+                                    }
+                                }
                                 <dl class="dlist-align">
                                     <dt>Total:</dt>
                                     <dd class="text-right  h5">
@@ -135,7 +141,7 @@
                                 </dl>
                                 <hr>
                                 <p class="text-center mb-3">
-                                    <img src="images/misc/payments.png" height="26">
+                                    <img src="~/images/misc/payments.png" height="26">
                                 </p>
 
                             </div>
@@ -182,8 +188,8 @@
                                 </g>
                             </svg>
                             <br /><br />
-                            <h4>Your basket is empty</h4>
-                            <h5>Go to the <a asp-controller="Catalog">home page</a> and check our products. <br />When you find one you like, click the add to basket button ;)</h5>
+                            <h4>Seu carrinho está vazio</h4>
+                            <h5>Vá para a <a asp-controller="Catalogo">página inicial</a> e confira nossos carrinhos. <br />Quando encontrar um que goste clique no botão adicionar ao carrinho ;)</h5>
                         </div>
                     </div>
                 </div>
