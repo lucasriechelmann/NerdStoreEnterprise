@@ -6,14 +6,14 @@ namespace NSE.WebApp.MVC.Extensions
 {
     public class BasketViewComponent : ViewComponent
     {
-        private readonly IBasketService _basketService;
-        public BasketViewComponent(IBasketService basketService)
+        private readonly IShoppingBffService _shoppingBffService;
+        public BasketViewComponent(IShoppingBffService shoppingBffService)
         {
-            _basketService = basketService;
+            _shoppingBffService = shoppingBffService;
         }
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _basketService.GetBasket() ?? new BasketViewModel());
+            return View(await _shoppingBffService.GetBasketQuantity());
         }
     }
 }

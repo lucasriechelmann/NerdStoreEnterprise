@@ -24,11 +24,6 @@ public static class DependencyInjectionConfig
             //.AddTransientHttpErrorPolicy(p => p.WaitAndRetryAsync(3, _ => TimeSpan.FromMicroseconds(600)));
             .AddPolicyHandler(PollyExtensions.WaitRetry())
             .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
-
-        services.AddHttpClient<IBasketService, BasketService>()
-            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()            
-            .AddPolicyHandler(PollyExtensions.WaitRetry())
-            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
         
         services.AddHttpClient<IShoppingBffService, ShoppingBffService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
