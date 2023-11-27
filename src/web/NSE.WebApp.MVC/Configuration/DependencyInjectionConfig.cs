@@ -15,8 +15,9 @@ public static class DependencyInjectionConfig
         services.AddScoped<IAspNetUser, AspNetUser>();
 
         services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
-        services.AddHttpClient<IAuthenticationService, AuthenticationService>();
-
+        services.AddHttpClient<IAuthenticationService, AuthenticationService>()
+            .AddPolicyHandler(PollyExtensions.WaitRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30))); ;
         
         services.AddHttpClient<ICatalogService, CatalogService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
@@ -27,7 +28,17 @@ public static class DependencyInjectionConfig
         services.AddHttpClient<IBasketService, BasketService>()
             .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()            
             .AddPolicyHandler(PollyExtensions.WaitRetry())
-            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));        
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+        
+        services.AddHttpClient<IShoppingBffService, ShoppingBffService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(PollyExtensions.WaitRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+        services.AddHttpClient<ICustomerService, CustomerService>()
+            .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            .AddPolicyHandler(PollyExtensions.WaitRetry())
+            .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
         #region Refit
         //services.AddHttpClient("Refit", options => options.BaseAddress = new Uri(configuration.GetSection("UrlCatalog").Value));

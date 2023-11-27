@@ -7,4 +7,5 @@ public class AppSettings
     public string UrlCustomer { get; set; }
     public string UrlOrder { get; set; }
     public string UrlPayment { get; set; }
+    public string UrlShoppingBff { get; set; }
 }
