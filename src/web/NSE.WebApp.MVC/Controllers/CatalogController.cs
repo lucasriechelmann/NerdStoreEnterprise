@@ -1,29 +1,28 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NSE.WebApp.MVC.Services;
 
-namespace NSE.WebApp.MVC.Controllers
+namespace NSE.WebApp.MVC.Controllers;
+
+public class CatalogController : MainController
 {
-    public class CatalogController : MainController
+    private readonly ICatalogService _catalogService;
+    
+    public CatalogController(ICatalogService catalogService)
     {
-        private readonly ICatalogService _catalogService;
-        
-        public CatalogController(ICatalogService catalogService)
-        {
-            _catalogService = catalogService;
-        }
-        [HttpGet]
-        [Route("")]
-        [Route("products")]
-        public async Task<IActionResult> Index()
-        {
-            var products = await _catalogService.GetAll();
-            return View(products);
-        }
-        [HttpGet("product-detail/{id}")]
-        public async Task<IActionResult> ProductDetail(Guid id)
-        {
-            var product = await _catalogService.GetById(id);
-            return View(product);
-        }
+        _catalogService = catalogService;
+    }
+    [HttpGet]
+    [Route("")]
+    [Route("products")]
+    public async Task<IActionResult> Index()
+    {
+        var products = await _catalogService.GetAll();
+        return View(products);
+    }
+    [HttpGet("product-detail/{id}")]
+    public async Task<IActionResult> ProductDetail(Guid id)
+    {
+        var product = await _catalogService.GetById(id);
+        return View(product);
     }
 }
